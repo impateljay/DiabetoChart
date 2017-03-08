@@ -3,6 +3,7 @@ package com.jay.diabetochart;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -11,11 +12,13 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnChartValueSelectedListener {
 
     private LineChart mChart;
 
@@ -25,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mChart = (LineChart) findViewById(R.id.chart);
-//        mChart.setOnChartValueSelectedListener(this);
+        mChart.setOnChartValueSelectedListener(this);
 
         // no description text
         mChart.getDescription().setEnabled(false);
@@ -155,5 +158,17 @@ public class MainActivity extends AppCompatActivity {
             // set data
             mChart.setData(data);
         }
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        mChart.centerViewToAnimated(e.getX(), e.getY(), mChart.getData().getDataSetByIndex(h.getDataSetIndex())
+                .getAxisDependency(), 500);
+        Toast.makeText(this, "X : "+ e.getX()+" Y : "+ e.getY(),Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNothingSelected() {
+        Toast.makeText(this, "Nothing selected",Toast.LENGTH_SHORT).show();
     }
 }
